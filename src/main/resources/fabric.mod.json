@@ -3,9 +3,9 @@
 	"id": "gcbmod",
 	"version": "${version}",
 	"name": "gcbmod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This is an API mod for support drawing particle,extra key input and some extra helpful feature",
 	"authors": [
-		"Me!"
+		"EIQUI"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
