@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -62,10 +63,19 @@ public class KeyInput {
             IS_PRESSED.put(key,false);
         }
 
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.currentScreen == null) {
                 for(KeyBinding key : KEYS){
-                    boolean pushed = key.isPressed();
+                    InputUtil.Key realKey = InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey());
+                    boolean pushed = false;
+                    if (realKey.getCategory() == InputUtil.Type.KEYSYM) {
+                        pushed = InputUtil.isKeyPressed(
+                                        MinecraftClient.getInstance().getWindow().getHandle(), realKey.getCode());
+                    }else if (realKey.getCategory() == InputUtil.Type.MOUSE) {
+                        pushed = GLFW.glfwGetMouseButton(
+                                MinecraftClient.getInstance().getWindow().getHandle(),
+                                realKey.getCode()) == GLFW.GLFW_PRESS;;
+                    }
                     if(IS_PRESSED.getOrDefault(key,false) != pushed){
                         IS_PRESSED.put(key,pushed);
                         processInput(key,pushed);
