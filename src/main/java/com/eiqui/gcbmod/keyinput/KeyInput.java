@@ -17,14 +17,6 @@ public class KeyInput {
     private static Map<KeyBinding, Boolean> IS_PRESSED = new HashMap<>();
 
     public static void Initialize() {
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            run();
-        });
-    }
-
-    public static void run(){
-        //KEYS.add(InputUtil.fromTranslationKey("key.keyboard.0"));
-
         // ZXCV 키 추가
         KeyBinding z = new KeyBinding("key.keyboard.z",
                 InputUtil.fromTranslationKey("key.keyboard.z").getCode(), "category.GCB");
@@ -51,9 +43,12 @@ public class KeyInput {
         KeyBindingHelper.registerKeyBinding(k0);
         KEYS.add(k0);
 
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            run();
+        });
+    }
 
-        //KEYS.add(new KeyBinding("key.keyboard.left.control", InputUtil.fromTranslationKey("key.keyboard.left.control").getCode(), "gcb.custom"));
-
+    public static void run(){
         // 숫자 1~9 키 추가
         Collections.addAll(KEYS, MinecraftClient.getInstance().options.hotbarKeys);
 
@@ -61,7 +56,6 @@ public class KeyInput {
         KEYS.add(MinecraftClient.getInstance().options.attackKey);
         KEYS.add(MinecraftClient.getInstance().options.useKey);
         KEYS.add(MinecraftClient.getInstance().options.pickItemKey);
-
         KEYS.add(MinecraftClient.getInstance().options.dropKey);
 
         for(KeyBinding key : KEYS){
