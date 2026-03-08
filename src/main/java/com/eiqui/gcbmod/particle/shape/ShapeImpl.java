@@ -7,11 +7,22 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ShapeImpl implements Shape {
+    private static final long TICK_INTERVAL_MS = 20;
+    private static final double TICK_INTERVAL_SEC = TICK_INTERVAL_MS / 1000.0d;
+    private static final ScheduledExecutorService scheduler =
+            Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "GCB-Particle-Scheduler");
+                t.setDaemon(true);
+                return t;
+            });
+
     protected Partic particle;
     protected Vector[] matrix = {new Vector(1,0,0),new Vector(0,1,0),new Vector(0,0,1)};
     protected double time = 0;
@@ -80,8 +91,9 @@ public abstract class ShapeImpl implements Shape {
             return;
         }
 
-        final double loopPerTick = size/(time/0.025d);
-        (new Timer()).scheduleAtFixedRate(new TimerTask() {
+        final double loopPerTick = size/(time/TICK_INTERVAL_SEC);
+        final ScheduledFuture<?>[] futureHolder = new ScheduledFuture<?>[1];
+        futureHolder[0] = scheduler.scheduleAtFixedRate(new Runnable() {
             int i = 0;
             double count = loopPerTick;
             @Override
@@ -93,7 +105,7 @@ public abstract class ShapeImpl implements Shape {
                         Vector targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
                         for(; i < count; i++) {
                             if (i >= size) {
-                                cancel();
+                                futureHolder[0].cancel(false);
                                 return;
                             }
                             Vector vector = result[i];
@@ -104,7 +116,7 @@ public abstract class ShapeImpl implements Shape {
                 }else{
                     for(; i < count; i++) {
                         if (i >= size) {
-                            cancel();
+                            futureHolder[0].cancel(false);
                             return;
                         }
                         Vector vector = result[i];
@@ -114,7 +126,7 @@ public abstract class ShapeImpl implements Shape {
                 }
                 count += loopPerTick;
             }
-        }, 0, 25);
+        }, 0, TICK_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
 }

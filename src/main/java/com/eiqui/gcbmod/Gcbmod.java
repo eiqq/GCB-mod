@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class Gcbmod implements ModInitializer {
 	public static final String MOD_ID = "gcbmod";
-	public static final String modVersion = "2.0.0";
+	public static final String modVersion = "2.0.1";
 	public static final String GCB_IDENTIFIER = "gcb";
 
 	// This logger is used to write text to the console and the log file.
