@@ -41,7 +41,7 @@ public final class BulkDataHandler {
     }
 
     public static void handle(BulkEntityDataPayload payload) {
-        LOG.info("[MEG] Received bulk_data packet ({} bytes)", payload.data().readableBytes()); // TODO: 임시 로그, 확인 후 제거
+        //LOG.info("[MEG] Received bulk_data packet ({} bytes)", payload.data().readableBytes()); // TODO: 임시 로그, 확인 후 제거
         var mc = MinecraftClient.getInstance();
         var buf = payload.data();
         var entries = decode(buf);
