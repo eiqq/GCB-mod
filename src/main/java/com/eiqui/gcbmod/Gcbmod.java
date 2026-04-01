@@ -4,6 +4,7 @@ import com.eiqui.gcbmod.camera.GCBPerspective;
 import com.eiqui.gcbmod.keyinput.KeyInput;
 import com.eiqui.gcbmod.network.PacketS2C;
 import com.eiqui.gcbmod.network.StringPayload;
+import net.gensokyoreimagined.megClientMod.network.BulkDataHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 
 public class Gcbmod implements ModInitializer {
 	public static final String MOD_ID = "gcbmod";
-	public static final String modVersion = "2.0.1";
+	public static final String modVersion = FabricLoader.getInstance()
+			.getModContainer(MOD_ID).orElseThrow()
+			.getMetadata().getVersion().getFriendlyString();
 	public static final String GCB_IDENTIFIER = "gcb";
 
 	// This logger is used to write text to the console and the log file.
@@ -29,6 +32,7 @@ public class Gcbmod implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("GCB MOD LOADED");
 		PacketS2C.registerHandler();
+		BulkDataHandler.register();
 		KeyInput.Initialize();
 		GCBPerspective.Initialize();
 
