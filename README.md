@@ -28,9 +28,9 @@ Sends real-time press/release states of 13 keybindings to the server.
 Detects and notifies the server when the player switches camera perspective.
 
 ### 플레이어 속도 제어 / Player Velocity
-서버에서 클라이언트 플레이어에게 커스텀 속도 벡터를 적용합니다. 넉백, 발사 등의 서버 주도 이동에 사용됩니다.
+서버에서 클라이언트 플레이어에게 커스텀 속도 벡터를 적용합니다. 바닐라 마인크래프트의 패킷 통신은 플레이어 속도가 80blocks/s를 넘을 수 없는 한계가 있기 때문에, 이 기능을 통해 서버 주도의 고속 넉백, 발사 등의 이동을 구현합니다.
 
-Applies custom velocity vectors from the server to the client player. Used for server-driven knockback, launches, etc.
+Applies custom velocity vectors from the server to the client player. Vanilla Minecraft packet communication has a hard limit of 80 blocks/s for player velocity, so this feature enables server-driven high-speed knockback, launches, and other movement effects beyond that limit.
 
 ## 설치 / Installation
 
