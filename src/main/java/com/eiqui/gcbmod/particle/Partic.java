@@ -1,25 +1,25 @@
 package com.eiqui.gcbmod.particle;
 
 import com.eiqui.gcbmod.utils.Vector;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 
 import static com.eiqui.gcbmod.particle.Parser.parseBlockState;
 import static com.eiqui.gcbmod.particle.Parser.parseVector;
 
 public class Partic {
-    private final Random random = Random.createThreadSafe();
+    private final RandomSource random = RandomSource.createThreadSafe();
 
     public Vector offset = new Vector(0,0,0);
     public int count = 0;
     public double speed = 0;
     public String data;
     public boolean force = false;
-    private ParticleEffect particleEffect;
+    private ParticleOptions particleEffect;
 
     public Partic() {}
 
@@ -31,31 +31,31 @@ public class Partic {
         this.force = force;
 
         ParticleType<?> particleType =
-                Registries.PARTICLE_TYPE.get(Identifier.of("minecraft",particle.toLowerCase()));
+                BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft",particle.toLowerCase()));
         if(particleType == null) {
             return;
         }
         String[] datas = data.split(",");
         if(particleType.equals(ParticleTypes.DUST_COLOR_TRANSITION)) {
-            particleEffect = new DustColorTransitionParticleEffect(
+            particleEffect = new DustColorTransitionOptions(
                     Integer.parseInt(datas[0]),
                    Integer.parseInt(datas[1]),
                     Float.parseFloat(datas[2]));
         }else if(particleType.equals(ParticleTypes.TINTED_LEAVES)) {
-            particleEffect = TintedParticleEffect.create(ParticleTypes.TINTED_LEAVES,Integer.parseInt(datas[0]));
+            particleEffect = ColorParticleOption.create(ParticleTypes.TINTED_LEAVES,Integer.parseInt(datas[0]));
         }else if(particleType.equals(ParticleTypes.ENTITY_EFFECT)) {
-            particleEffect = TintedParticleEffect.create(ParticleTypes.ENTITY_EFFECT,Integer.parseInt(datas[0]));
+            particleEffect = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT,Integer.parseInt(datas[0]));
         }else if(particleType.equals(ParticleTypes.SCULK_CHARGE)) {
-            particleEffect = new SculkChargeParticleEffect(Float.parseFloat(datas[0]));
+            particleEffect = new SculkChargeParticleOptions(Float.parseFloat(datas[0]));
         }else if(particleType.equals(ParticleTypes.SHRIEK)) {
-            particleEffect = new ShriekParticleEffect(Integer.parseInt(datas[0]));
+            particleEffect = new ShriekParticleOption(Integer.parseInt(datas[0]));
         }else if(particleType.equals(ParticleTypes.BLOCK) ||
                 particleType.equals(ParticleTypes.BLOCK_CRUMBLE) ||
                 particleType.equals(ParticleTypes.BLOCK_MARKER) ||
                 particleType.equals(ParticleTypes.DUST_PILLAR) ||
                 particleType.equals(ParticleTypes.FALLING_DUST)) {
             particleEffect =
-                    new BlockStateParticleEffect((ParticleType<BlockStateParticleEffect>) particleType,
+                    new BlockParticleOption((ParticleType<BlockParticleOption>) particleType,
                             parseBlockState(datas[0]));
         }else{
             particleEffect = (SimpleParticleType) particleType;
@@ -69,10 +69,10 @@ public class Partic {
             double x = speed * t.getX();
             double y = speed * t.getY();
             double z = speed * t.getZ();
-            MinecraftClient.getInstance().execute(() -> {
-                ClientWorld cw = MinecraftClient.getInstance().world;
+            Minecraft.getInstance().execute(() -> {
+                ClientLevel cw = Minecraft.getInstance().level;
                 if(cw != null) {
-                    cw.addParticleClient(particleEffect, force, force,
+                    cw.addParticle(particleEffect, force, force,
                             loc.getX(),loc.getY(),loc.getZ(),
                             x,y,z);
                 }
@@ -85,10 +85,10 @@ public class Partic {
                 double k = this.random.nextGaussian() * speed;
                 double l = this.random.nextGaussian() * speed;
                 double m = this.random.nextGaussian() * speed;
-                MinecraftClient.getInstance().execute(() -> {
-                    ClientWorld cw = MinecraftClient.getInstance().world;
+                Minecraft.getInstance().execute(() -> {
+                    ClientLevel cw = Minecraft.getInstance().level;
                     if(cw != null){
-                        cw.addParticleClient(particleEffect, force, force,
+                        cw.addParticle(particleEffect, force, force,
                                 loc.getX() + g, loc.getY() + h, loc.getZ() + j,
                                 k, l, m);
                     }

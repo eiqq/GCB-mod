@@ -3,8 +3,9 @@ package com.eiqui.gcbmod;
 import com.eiqui.gcbmod.camera.GCBPerspective;
 import com.eiqui.gcbmod.keyinput.KeyInput;
 import com.eiqui.gcbmod.network.PacketS2C;
+import com.eiqui.gcbmod.modelengine.BulkReceiver;
+import com.eiqui.gcbmod.playerControl.MountPrediction;
 import com.eiqui.gcbmod.network.StringPayload;
-import net.gensokyoreimagined.megClientMod.network.BulkDataHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -32,7 +33,8 @@ public class Gcbmod implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("GCB MOD LOADED");
 		PacketS2C.registerHandler();
-		BulkDataHandler.register();
+		BulkReceiver.register();
+		MountPrediction.register();
 		KeyInput.Initialize();
 		GCBPerspective.Initialize();
 

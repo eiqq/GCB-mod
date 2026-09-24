@@ -2,10 +2,10 @@ package com.eiqui.gcbmod.particle;
 
 import com.eiqui.gcbmod.particle.shape.*;
 import com.eiqui.gcbmod.utils.Vector;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,12 +53,12 @@ public class Parser {
     }
 
     public static BlockState parseBlockState(String name){
-        if (name == null || name.isEmpty()) return Blocks.AIR.getDefaultState();
+        if (name == null || name.isEmpty()) return Blocks.AIR.defaultBlockState();
         name = name.toLowerCase(Locale.ROOT).trim();
         String full = name.contains(":") ? name : "minecraft:" + name;
         Identifier id = Identifier.tryParse(full);
-        if (id == null) return Blocks.AIR.getDefaultState(); // 파싱 실패 시 안전값
-        var block = Registries.BLOCK.get(id);
-        return block.getDefaultState();
+        if (id == null) return Blocks.AIR.defaultBlockState(); // 파싱 실패 시 안전값
+        var block = BuiltInRegistries.BLOCK.getValue(id);
+        return block.defaultBlockState();
     }
 }

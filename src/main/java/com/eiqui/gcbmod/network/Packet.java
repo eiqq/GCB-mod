@@ -1,7 +1,6 @@
 package com.eiqui.gcbmod.network;
 
 import com.eiqui.gcbmod.particle.Parser;
-import com.eiqui.gcbmod.playerControl.Velocity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import static com.eiqui.gcbmod.Gcbmod.modVersion;
@@ -15,9 +14,6 @@ public class Packet {
         switch(header) {
             case "PARTICLE":
                 Parser.Parse(datas);
-                break;
-            case "VELOCITY":
-                Velocity.receivePacket(datas[1]);
                 break;
             default:
                 ClientPlayNetworking.send(new StringPayload(modVersion));

@@ -1,6 +1,6 @@
 package com.eiqui.gcbmod.utils;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import java.util.Objects;
  * representation by the implementation.
  */
 public class Location implements Cloneable {
-    private World world;
+    private Level world;
     private double x;
     private double y;
     private double z;
@@ -31,7 +31,7 @@ public class Location implements Cloneable {
      * @param y The y-coordinate of this new location
      * @param z The z-coordinate of this new location
      */
-    public Location(final World world, final double x, final double y, final double z) {
+    public Location(final Level world, final double x, final double y, final double z) {
         this(world, x, y, z, 0, 0);
     }
 
@@ -45,7 +45,7 @@ public class Location implements Cloneable {
      * @param yaw The absolute rotation on the x-plane, in degrees
      * @param pitch The absolute rotation on the y-plane, in degrees
      */
-    public Location(final World world, final double x, final double y, final double z, final float yaw, final float pitch) {
+    public Location(final Level world, final double x, final double y, final double z, final float yaw, final float pitch) {
         this.world = world;
         this.x = x;
         this.y = y;
@@ -59,11 +59,11 @@ public class Location implements Cloneable {
      *
      * @param world New world that this location resides in
      */
-    public void setWorld(@Nullable World world) {
+    public void setWorld(@Nullable Level world) {
         this.world = world;
     }
 
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 
@@ -487,7 +487,7 @@ public class Location implements Cloneable {
     }
 
     public boolean isChunkLoaded() {
-        return this.getWorld().isChunkLoaded(locToBlock(x) >> 4, locToBlock(z) >> 4);
+        return this.getWorld().hasChunk(locToBlock(x) >> 4, locToBlock(z) >> 4);
     }
 
 
@@ -593,7 +593,7 @@ public class Location implements Cloneable {
         }
         final Location other = (Location) obj;
 
-        World otherWorld = (other.world == null) ? null : other.world;
+        Level otherWorld = (other.world == null) ? null : other.world;
         if (!Objects.equals(world, otherWorld)) {
             return false;
         }
@@ -680,7 +680,7 @@ public class Location implements Cloneable {
         return this.getZ();
     }
 
-    public @NotNull Location toLocation(@NotNull World world) {
+    public @NotNull Location toLocation(@NotNull Level world) {
         return new Location(world, this.x(), this.y(), this.z(), this.getYaw(), this.getPitch());
     }
 }

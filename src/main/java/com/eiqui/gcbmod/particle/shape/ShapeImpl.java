@@ -2,9 +2,9 @@ package com.eiqui.gcbmod.particle.shape;
 
 import com.eiqui.gcbmod.particle.Partic;
 import com.eiqui.gcbmod.utils.Vector;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -73,7 +73,7 @@ public abstract class ShapeImpl implements Shape {
         int size = result.length;
         if(time <= 0 || size <= 1){
             if(target != null){
-                ClientWorld cw = MinecraftClient.getInstance().world;
+                ClientLevel cw = Minecraft.getInstance().level;
                 Entity realTarget = cw.getEntity(target);
                 if(realTarget != null){
                     Vector targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
@@ -99,7 +99,7 @@ public abstract class ShapeImpl implements Shape {
             @Override
             public void run() {
                 if(target != null){
-                    ClientWorld cw = MinecraftClient.getInstance().world;
+                    ClientLevel cw = Minecraft.getInstance().level;
                     Entity realTarget = cw.getEntity(target);
                     if(realTarget != null){
                         Vector targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());

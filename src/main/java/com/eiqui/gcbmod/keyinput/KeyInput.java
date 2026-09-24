@@ -1,48 +1,28 @@
 package com.eiqui.gcbmod.keyinput;
 
 import com.eiqui.gcbmod.network.StringPayload;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
 public class KeyInput {
     public static final String HEADER = "KEYINPUT";
-    private static List<KeyBinding> KEYS = new ArrayList<>();
-    private static Map<KeyBinding, Boolean> IS_PRESSED = new HashMap<>();
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("gcb", "gcb"));
+    private static List<KeyMapping> KEYS = new ArrayList<>();
+    private static Map<KeyMapping, Boolean> IS_PRESSED = new HashMap<>();
 
     public static void Initialize() {
-        // ZXCV 키 추가
-        KeyBinding z = new KeyBinding("key.keyboard.z",
-                InputUtil.fromTranslationKey("key.keyboard.z").getCode(), "category.GCB");
-        KeyBindingHelper.registerKeyBinding(z);
-        KEYS.add(z);
-
-        KeyBinding x = new KeyBinding("key.keyboard.x",
-                InputUtil.fromTranslationKey("key.keyboard.x").getCode(), "category.GCB");
-        KeyBindingHelper.registerKeyBinding(x);
-        KEYS.add(x);
-
-        KeyBinding c = new KeyBinding("key.keyboard.c",
-                InputUtil.fromTranslationKey("key.keyboard.c").getCode(), "category.GCB");
-        KeyBindingHelper.registerKeyBinding(c);
-        KEYS.add(c);
-
-        KeyBinding v = new KeyBinding("key.keyboard.v",
-                InputUtil.fromTranslationKey("key.keyboard.v").getCode(), "category.GCB");
-        KeyBindingHelper.registerKeyBinding(v);
-        KEYS.add(v);
-
-        KeyBinding k0 = new KeyBinding("key.keyboard.0",
-                InputUtil.fromTranslationKey("key.keyboard.0").getCode(), "category.GCB");
-        KeyBindingHelper.registerKeyBinding(k0);
-        KEYS.add(k0);
+        // ZXCV + 0 키 추가
+        for (String name : new String[]{"key.keyboard.z", "key.keyboard.x", "key.keyboard.c", "key.keyboard.v", "key.keyboard.0"}) {
+            KEYS.add(KeyMappingHelper.registerKeyMapping(new KeyMapping(name, InputConstants.getKey(name).getValue(), CATEGORY)));
+        }
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             run();
@@ -51,43 +31,33 @@ public class KeyInput {
 
     public static void run(){
         // 숫자 1~9 키 추가
-        Collections.addAll(KEYS, MinecraftClient.getInstance().options.hotbarKeys);
+        Collections.addAll(KEYS, Minecraft.getInstance().options.keyHotbarSlots);
 
         // 키 바인딩 등록
-        KEYS.add(MinecraftClient.getInstance().options.attackKey);
-        KEYS.add(MinecraftClient.getInstance().options.useKey);
-        KEYS.add(MinecraftClient.getInstance().options.pickItemKey);
-        KEYS.add(MinecraftClient.getInstance().options.dropKey);
+        KEYS.add(Minecraft.getInstance().options.keyAttack);
+        KEYS.add(Minecraft.getInstance().options.keyUse);
+        KEYS.add(Minecraft.getInstance().options.keyPickItem);
+        KEYS.add(Minecraft.getInstance().options.keyDrop);
 
-        for(KeyBinding key : KEYS){
+        for(KeyMapping key : KEYS){
             IS_PRESSED.put(key,false);
         }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.currentScreen == null) {
-                for(KeyBinding key : KEYS){
-                    InputUtil.Key realKey = InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey());
-                    boolean pushed = false;
-                    if (realKey.getCategory() == InputUtil.Type.KEYSYM) {
-                        pushed = InputUtil.isKeyPressed(
-                                        MinecraftClient.getInstance().getWindow().getHandle(), realKey.getCode());
-                    }else if (realKey.getCategory() == InputUtil.Type.MOUSE) {
-                        pushed = GLFW.glfwGetMouseButton(
-                                MinecraftClient.getInstance().getWindow().getHandle(),
-                                realKey.getCode()) == GLFW.GLFW_PRESS;;
-                    }
+            if (client.gui.screen() == null) {
+                for(KeyMapping key : KEYS){
+                    boolean pushed = key.isDown();
                     if(IS_PRESSED.getOrDefault(key,false) != pushed){
                         IS_PRESSED.put(key,pushed);
                         processInput(key,pushed);
                     }
                 }
-
             }
         });
     }
 
-    private static void processInput(KeyBinding key, boolean ispushed) {
-        ClientPlayNetworking.send(new StringPayload(HEADER + ":" + key.getTranslationKey() + ":" + ispushed));
+    private static void processInput(KeyMapping key, boolean ispushed) {
+        ClientPlayNetworking.send(new StringPayload(HEADER + ":" + key.getName() + ":" + ispushed));
     }
 
 }

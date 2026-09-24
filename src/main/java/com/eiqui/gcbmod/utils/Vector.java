@@ -2,7 +2,7 @@ package com.eiqui.gcbmod.utils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Doubles;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 
@@ -779,7 +779,7 @@ public class Vector implements Cloneable {
      * @return the location
      */
     @NotNull
-    public Location toLocation(@NotNull World world) {
+    public Location toLocation(@NotNull Level world) {
         return new Location(world, x, y, z);
     }
 
@@ -792,7 +792,7 @@ public class Vector implements Cloneable {
      * @return the location
      */
     @NotNull
-    public Location toLocation(@NotNull World world, float yaw, float pitch) {
+    public Location toLocation(@NotNull Level world, float yaw, float pitch) {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
