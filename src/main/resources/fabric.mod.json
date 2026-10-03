@@ -17,6 +17,12 @@
 	"entrypoints": {
 		"main": [
 			"com.eiqui.gcbmod.Gcbmod"
+		],
+		"modmenu": [
+			"com.eiqui.gcbmod.compat.ModMenuCompat"
+		],
+		"sodium:config_api_user": [
+			"com.eiqui.gcbmod.compat.SodiumCompat"
 		]
 	},
 	"mixins": [
@@ -29,6 +35,8 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
-	}
+		"modmenu": "*",
+		"sodium": "*"
+	},
+	"accessWidener": "gcbmod.accesswidener"
 }

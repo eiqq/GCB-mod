@@ -11,6 +11,11 @@ base {
 }
 
 repositories {
+	maven {
+		name = 'Modrinth'
+		url = 'https://api.modrinth.com/maven'
+		content { includeGroup 'maven.modrinth' }
+	}
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -25,7 +30,14 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	compileOnly "maven.modrinth:modmenu:21.0.0"
+	compileOnly "maven.modrinth:sodium:mc26.3-0.9.3-alpha.1-fabric"
 	
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/gcbmod.accesswidener")
 }
 
 processResources {

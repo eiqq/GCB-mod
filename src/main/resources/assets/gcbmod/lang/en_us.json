@@ -4,5 +4,8 @@
   "key.keyboard.x": "Augment 2",
   "key.keyboard.c": "Augment 3",
   "key.keyboard.v": "Augment 4",
-  "key.keyboard.0": "Keyboard 0"
+  "key.keyboard.0": "Keyboard 0",
+  "gcbmod.options.title": "GCB",
+  "gcbmod.options.directAtlasUpload": "Direct Texture Loading",
+  "gcbmod.options.directAtlasUpload.tooltip": "While loading resource packs, writes textures straight into the atlas instead of creating a separate GPU texture for every sprite first. Lowers graphics memory use at load time, preventing crashes while loading. No effect on in-game frame rate. Changing this reloads resources."
 }

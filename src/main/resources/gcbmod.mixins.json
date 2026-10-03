@@ -10,6 +10,8 @@
 		"requireAnnotations": true
 	},
 	"client": [
-		"InterpolationStepsAccessor"
+		"InterpolationStepsAccessor",
+		"TextureAtlasMixin",
+		"VideoSettingsScreenMixin"
 	]
 }

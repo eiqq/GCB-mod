@@ -4,5 +4,8 @@
   "key.keyboard.x": "증강사용 2",
   "key.keyboard.c": "증강사용 3",
   "key.keyboard.v": "증강사용 4",
-  "key.keyboard.0": "키보드 0"
+  "key.keyboard.0": "키보드 0",
+  "gcbmod.options.title": "GCB",
+  "gcbmod.options.directAtlasUpload": "텍스처 직접 로딩",
+  "gcbmod.options.directAtlasUpload.tooltip": "리소스팩을 불러올 때 텍스처마다 그래픽카드 텍스처를 따로 만들지 않고 아틀라스에 바로 씁니다. 불러오는 순간의 그래픽 메모리 사용량이 줄어 로딩 중 튕김을 막습니다. 게임 중 프레임에는 영향이 없습니다. 바꾸면 리소스를 다시 불러옵니다."
 }
