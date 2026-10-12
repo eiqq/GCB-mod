@@ -59,8 +59,11 @@ public class Line extends ShapeImpl implements Periodable{
     }
 
     public static Line deserialize(String[] data,Partic particle) {
+        return read(new Line(particle),data);
+    }
+
+    static Line read(Line line,String[] data) {
         //index 0 is header
-        Line line = new Line(particle);
         line.setPeriod(Double.parseDouble(data[1]));
 
         line.setExpand(Double.parseDouble(data[2])); // matrix generic

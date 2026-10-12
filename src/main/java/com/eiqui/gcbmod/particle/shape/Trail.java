@@ -37,4 +37,8 @@ public class Trail extends Line{
 
         print(result,positions[0]);
     }
+
+    public static Line deserialize(String[] data,Partic particle) {
+        return read(new Trail(particle),data);
+    }
 }

@@ -8,6 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 
+import java.util.Locale;
+
 import static com.eiqui.gcbmod.particle.Parser.parseBlockState;
 import static com.eiqui.gcbmod.particle.Parser.parseVector;
 
@@ -31,7 +33,7 @@ public class Partic {
         this.force = force;
 
         ParticleType<?> particleType =
-                BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft",particle.toLowerCase()));
+                BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft",particle.toLowerCase(Locale.ROOT)));
         if(particleType == null) {
             return;
         }
@@ -45,6 +47,8 @@ public class Partic {
             particleEffect = ColorParticleOption.create(ParticleTypes.TINTED_LEAVES,Integer.parseInt(datas[0]));
         }else if(particleType.equals(ParticleTypes.ENTITY_EFFECT)) {
             particleEffect = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT,Integer.parseInt(datas[0]));
+        }else if(particleType.equals(ParticleTypes.FLASH)) {
+            particleEffect = ColorParticleOption.create(ParticleTypes.FLASH,Integer.parseInt(datas[0]));
         }else if(particleType.equals(ParticleTypes.SCULK_CHARGE)) {
             particleEffect = new SculkChargeParticleOptions(Float.parseFloat(datas[0]));
         }else if(particleType.equals(ParticleTypes.SHRIEK)) {

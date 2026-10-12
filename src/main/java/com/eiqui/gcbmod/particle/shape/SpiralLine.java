@@ -102,7 +102,7 @@ public class SpiralLine extends Line implements Circular{
 
         double rotateRadian = Math.toRadians(360d/points);
         if(inverse){
-            rotateRadian-=1d;
+            rotateRadian *= -1d;
         }
         Vector[] result = new Vector[loop];
 

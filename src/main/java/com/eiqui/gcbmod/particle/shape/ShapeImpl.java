@@ -70,23 +70,20 @@ public abstract class ShapeImpl implements Shape {
     }
 
     protected void print(Vector[] result,Vector center){
+        final ClientLevel cw = Minecraft.getInstance().level;
         int size = result.length;
         if(time <= 0 || size <= 1){
+            Vector targetL = new Vector(0,0,0);
             if(target != null){
-                ClientLevel cw = Minecraft.getInstance().level;
                 Entity realTarget = cw.getEntity(target);
-                if(realTarget != null){
-                    Vector targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
-                    for(Vector vector : result) {
-                        Vector expandFactor = vector.clone().subtract(center).multiply(expand);
-                        particle.spawnParticle(vector.clone().add(targetL),expandFactor);
-                    }
+                if(realTarget == null){
+                    return;
                 }
-            }else{
-                for(Vector vector : result) {
-                    Vector expandFactor = vector.clone().subtract(center).multiply(expand);
-                    particle.spawnParticle(vector,expandFactor);
-                }
+                targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
+            }
+            for(Vector vector : result) {
+                Vector expandFactor = vector.clone().subtract(center).multiply(expand);
+                particle.spawnParticle(target == null ? vector : vector.clone().add(targetL),expandFactor);
             }
             return;
         }
@@ -98,33 +95,30 @@ public abstract class ShapeImpl implements Shape {
             double count = loopPerTick;
             @Override
             public void run() {
-                if(target != null){
-                    ClientLevel cw = Minecraft.getInstance().level;
-                    Entity realTarget = cw.getEntity(target);
-                    if(realTarget != null){
-                        Vector targetL = new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
-                        for(; i < count; i++) {
-                            if (i >= size) {
-                                futureHolder[0].cancel(false);
-                                return;
-                            }
-                            Vector vector = result[i];
-                            Vector expandFactor = vector.clone().subtract(center).multiply(expand);
-                            particle.spawnParticle(vector.clone().add(targetL),expandFactor);
-                        }
+                Minecraft.getInstance().execute(() -> {
+                    if(cw == null || Minecraft.getInstance().level != cw){
+                        futureHolder[0].cancel(false);
+                        return;
                     }
-                }else{
+                    Vector targetL = new Vector(0,0,0);
+                    if(target != null){
+                        Entity realTarget = cw.getEntity(target);
+                        targetL = realTarget == null ? null : new Vector(realTarget.getX(),realTarget.getY(),realTarget.getZ());
+                    }
                     for(; i < count; i++) {
                         if (i >= size) {
                             futureHolder[0].cancel(false);
                             return;
                         }
+                        if(targetL == null){
+                            continue;
+                        }
                         Vector vector = result[i];
                         Vector expandFactor = vector.clone().subtract(center).multiply(expand);
-                        particle.spawnParticle(vector,expandFactor);
+                        particle.spawnParticle(target == null ? vector : vector.clone().add(targetL),expandFactor);
                     }
-                }
-                count += loopPerTick;
+                    count += loopPerTick;
+                });
             }
         }, 0, TICK_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
