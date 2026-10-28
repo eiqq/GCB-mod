@@ -40,8 +40,16 @@ public class Gcbmod implements ModInitializer {
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			ClientPlayNetworking.send(new StringPayload(modVersion));
+			sendFeatures();
 			sendMods();
+			GCBPerspective.sendCurrent();
 		});
+	}
+
+	// 서버가 이 기능을 쓸 수 있는지 판단하는 데 쓴다(옛 모드는 안 보냄)
+	public static void sendFeatures(){
+		ClientPlayNetworking.send(new StringPayload("FEATURE:SKIN"));
+		ClientPlayNetworking.send(new StringPayload("FEATURE:PERSPECTIVE"));
 	}
 
 	public void sendMods(){
